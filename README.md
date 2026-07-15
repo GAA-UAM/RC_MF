@@ -50,7 +50,6 @@ python experiment_runner.py \
     --models rc_mf
 ```
 
-
 ## Run RC-MF with Bayesian optimization
 
 Use the `--use_bo` option to tune the model hyperparameters through Bayesian optimization:
@@ -73,7 +72,6 @@ config/model_search_spaces.yml
 ## Documentation
 
 Detailed usage instructions, commands, configuration options, and reproducibility examples are available in the project [Wiki](https://github.com/GAA-UAM/RC_MF/wiki).
-
 
 
 # Citations
