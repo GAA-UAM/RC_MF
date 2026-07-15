@@ -1,0 +1,374 @@
+base_mf:
+  type: base
+  class_name: ResidualCalibratedMF
+
+  fixed_params:
+    k: 20
+    use_bias: true
+    init_scale: 0.01
+
+    use_global_calib: false
+    use_user_calib: false
+    use_item_calib: false
+    use_group_calib: false
+
+    use_oof_calibration: false
+    oof_folds: 3
+    calibration_iters: 1
+    clip_correction: 0.0
+
+    n_user_groups: 3
+    n_item_groups: 3
+
+  default_params:
+    learning_rate: 0.003
+    lambda_reg: 0.02
+
+  grid_params:
+    learning_rate: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+    lambda_reg: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+
+  bo:
+    param_order: [learning_rate, lambda_reg]
+
+    bounds:
+      learning_rate: [-6, -2.5]
+      lambda_reg: [-7, 0.5]
+
+    transform:
+      learning_rate: pow10
+      lambda_reg: pow10
+
+    n_init: 35
+    n_iter: 140
+
+rc_mf_no_oof:
+  type: base
+  class_name: ResidualCalibratedMF
+
+  fixed_params:
+    k: 20
+    use_bias: true
+    init_scale: 0.01
+
+    use_global_calib: true
+    use_user_calib: true
+    use_item_calib: true
+    use_group_calib: true
+
+    use_oof_calibration: false
+    oof_folds: 3
+    calibration_iters: 5
+
+  default_params:
+    learning_rate: 0.003
+    lambda_reg: 0.02
+
+    n_user_groups: 3
+    n_item_groups: 3
+
+    lam_user_calib: 20.0
+    lam_item_calib: 20.0
+    lam_group_calib: 10.0
+    clip_correction: 1.0
+
+  grid_params:
+    learning_rate: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+    lambda_reg: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+    n_user_groups: [2, 3, 4]
+    n_item_groups: [2, 3, 4]
+    lam_user_calib: [1.0, 5.0, 10.0, 20.0, 50.0]
+    lam_item_calib: [1.0, 5.0, 10.0, 20.0, 50.0]
+    lam_group_calib: [1.0, 5.0, 10.0, 20.0, 50.0]
+    clip_correction: [0.25, 0.5, 1.0, 1.5, 2.0]
+
+  bo:
+    param_order:
+      [
+        learning_rate,
+        lambda_reg,
+        n_user_groups,
+        n_item_groups,
+        lam_user_calib,
+        lam_item_calib,
+        lam_group_calib,
+        clip_correction,
+      ]
+
+    bounds:
+      learning_rate: [-6, -2.5]
+      lambda_reg: [-7, 0.5]
+      n_user_groups: [1, 5]
+      n_item_groups: [1, 5]
+      lam_user_calib: [-2.0, 2.0]
+      lam_item_calib: [-2.0, 3.0]
+      lam_group_calib: [-3.0, 3.5]
+      clip_correction: [0.02, 5.0]
+
+    transform:
+      learning_rate: pow10
+      lambda_reg: pow10
+      n_user_groups: int
+      n_item_groups: int
+      lam_user_calib: pow10
+      lam_item_calib: pow10
+      lam_group_calib: pow10
+      clip_correction: identity
+
+    n_init: 35
+    n_iter: 140
+
+rc_mf_global_only:
+  type: base
+  class_name: ResidualCalibratedMF
+
+  fixed_params:
+    k: 20
+    use_bias: true
+    init_scale: 0.01
+
+    use_global_calib: true
+    use_user_calib: false
+    use_item_calib: false
+    use_group_calib: false
+
+    use_oof_calibration: true
+    oof_folds: 3
+    calibration_iters: 5
+
+    n_user_groups: 3
+    n_item_groups: 3
+
+    lam_user_calib: 20.0
+    lam_item_calib: 20.0
+    lam_group_calib: 10.0
+
+  default_params:
+    learning_rate: 0.003
+    lambda_reg: 0.02
+    clip_correction: 1.0
+
+  grid_params:
+    learning_rate: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+    lambda_reg: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+    clip_correction: [0.25, 0.5, 1.0, 1.5, 2.0]
+
+  bo:
+    param_order: [learning_rate, lambda_reg, clip_correction]
+
+    bounds:
+      learning_rate: [-6, -2.5]
+      lambda_reg: [-7, 0.5]
+      clip_correction: [0.02, 5.0]
+
+    transform:
+      learning_rate: pow10
+      lambda_reg: pow10
+      clip_correction: identity
+
+    n_init: 35
+    n_iter: 140
+
+rc_mf_user_item:
+  type: base
+  class_name: ResidualCalibratedMF
+
+  fixed_params:
+    k: 20
+    use_bias: true
+    init_scale: 0.01
+
+    use_global_calib: true
+    use_user_calib: true
+    use_item_calib: true
+    use_group_calib: false
+
+    use_oof_calibration: true
+    oof_folds: 3
+    calibration_iters: 5
+
+    n_user_groups: 3
+    n_item_groups: 3
+    lam_group_calib: 10.0
+
+  default_params:
+    learning_rate: 0.003
+    lambda_reg: 0.02
+    lam_user_calib: 20.0
+    lam_item_calib: 20.0
+    clip_correction: 1.0
+
+  grid_params:
+    learning_rate: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+    lambda_reg: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+    lam_user_calib: [1.0, 5.0, 10.0, 20.0, 50.0]
+    lam_item_calib: [1.0, 5.0, 10.0, 20.0, 50.0]
+    clip_correction: [0.25, 0.5, 1.0, 1.5, 2.0]
+
+  bo:
+    param_order:
+      [
+        learning_rate,
+        lambda_reg,
+        lam_user_calib,
+        lam_item_calib,
+        clip_correction,
+      ]
+
+    bounds:
+      learning_rate: [-6, -2.5]
+      lambda_reg: [-7, 0.5]
+      lam_user_calib: [-2.0, 2.0]
+      lam_item_calib: [-2.0, 3.0]
+      clip_correction: [0.02, 5.0]
+
+    transform:
+      learning_rate: pow10
+      lambda_reg: pow10
+      lam_user_calib: pow10
+      lam_item_calib: pow10
+      clip_correction: identity
+
+    n_init: 35
+    n_iter: 140
+
+rc_mf_group_only:
+  type: base
+  class_name: ResidualCalibratedMF
+
+  fixed_params:
+    k: 20
+    use_bias: true
+    init_scale: 0.01
+
+    use_global_calib: true
+    use_user_calib: false
+    use_item_calib: false
+    use_group_calib: true
+
+    use_oof_calibration: true
+    oof_folds: 3
+    calibration_iters: 5
+
+    lam_user_calib: 20.0
+    lam_item_calib: 20.0
+
+  default_params:
+    learning_rate: 0.003
+    lambda_reg: 0.02
+    n_user_groups: 3
+    n_item_groups: 3
+    lam_group_calib: 10.0
+    clip_correction: 1.0
+
+  grid_params:
+    learning_rate: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+    lambda_reg: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+    n_user_groups: [2, 3, 4]
+    n_item_groups: [2, 3, 4]
+    lam_group_calib: [1.0, 5.0, 10.0, 20.0, 50.0]
+    clip_correction: [0.25, 0.5, 1.0, 1.5, 2.0]
+
+  bo:
+    param_order:
+      [
+        learning_rate,
+        lambda_reg,
+        n_user_groups,
+        n_item_groups,
+        lam_group_calib,
+        clip_correction,
+      ]
+
+    bounds:
+      learning_rate: [-6, -2.5]
+      lambda_reg: [-7, 0.5]
+      n_user_groups: [1, 5]
+      n_item_groups: [1, 5]
+      lam_group_calib: [-3.0, 3.5]
+      clip_correction: [0.02, 5.0]
+
+    transform:
+      learning_rate: pow10
+      lambda_reg: pow10
+      n_user_groups: int
+      n_item_groups: int
+      lam_group_calib: pow10
+      clip_correction: identity
+
+    n_init: 35
+    n_iter: 140
+
+rc_mf:
+  type: base
+  class_name: ResidualCalibratedMF
+
+  fixed_params:
+    k: 20
+    use_bias: true
+    init_scale: 0.01
+
+    use_global_calib: true
+    use_user_calib: true
+    use_item_calib: true
+    use_group_calib: true
+
+    use_oof_calibration: true
+    oof_folds: 3
+    calibration_iters: 5
+
+  default_params:
+    learning_rate: 0.003
+    lambda_reg: 0.02
+    n_user_groups: 3
+    n_item_groups: 3
+    lam_user_calib: 20.0
+    lam_item_calib: 20.0
+    lam_group_calib: 10.0
+    clip_correction: 1.0
+
+  grid_params:
+    learning_rate: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+    lambda_reg: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+    n_user_groups: [2, 3, 4]
+    n_item_groups: [2, 3, 4]
+    lam_user_calib: [1.0, 5.0, 10.0, 20.0, 50.0]
+    lam_item_calib: [1.0, 5.0, 10.0, 20.0, 50.0]
+    lam_group_calib: [1.0, 5.0, 10.0, 20.0, 50.0]
+    clip_correction: [0.25, 0.5, 1.0, 1.5, 2.0]
+
+  bo:
+    param_order:
+      [
+        learning_rate,
+        lambda_reg,
+        n_user_groups,
+        n_item_groups,
+        lam_user_calib,
+        lam_item_calib,
+        lam_group_calib,
+        clip_correction,
+      ]
+
+    bounds:
+      learning_rate: [-6, -2.5]
+      lambda_reg: [-7, 0.5]
+      n_user_groups: [1, 5]
+      n_item_groups: [1, 5]
+      lam_user_calib: [-2.0, 2.0]
+      lam_item_calib: [-2.0, 3.0]
+      lam_group_calib: [-3.0, 3.5]
+      clip_correction: [0.02, 5.0]
+
+    transform:
+      learning_rate: pow10
+      lambda_reg: pow10
+      n_user_groups: int
+      n_item_groups: int
+      lam_user_calib: pow10
+      lam_item_calib: pow10
+      lam_group_calib: pow10
+      clip_correction: identity
+
+    n_init: 35
+    n_iter: 140

@@ -1,0 +1,291 @@
+rc_mf:
+    type: base
+    class_name: ResidualCalibratedMF
+
+    fixed_params:
+        k: 20
+        use_bias: true
+        init_scale: 0.01
+
+        oof_folds: 3
+        calibration_iters: 5
+
+    default_params:
+        learning_rate: 0.00005
+        lambda_reg: 1.0
+
+        n_user_groups: 1
+        n_item_groups: 1
+
+        lam_user_calib: 3.0
+        lam_item_calib: 100.0
+        lam_group_calib: 3000.0
+
+        clip_correction: 2.0
+        use_oof_calibration: false
+
+    grid_params:
+        learning_rate: [1e-5, 3e-5, 1e-4, 3e-4, 1e-3, 3e-3, 1e-2]
+        lambda_reg: [1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 3e-1, 1.0]
+
+        n_user_groups: [1, 2, 3, 4, 5]
+        n_item_groups: [1, 2, 3, 4, 5]
+
+        lam_user_calib: [0.03, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0]
+        lam_item_calib: [0.03, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0, 100.0, 300.0]
+        lam_group_calib:
+            [0.03, 0.1, 0.3, 1.0, 3.0, 10.0, 30.0, 100.0, 300.0, 1000.0]
+
+        clip_correction: [0.02, 0.05, 0.1, 0.25, 0.5, 1.0, 2.0, 3.0, 5.0]
+
+    bo:
+        param_order:
+            [
+                learning_rate,
+                lambda_reg,
+                n_user_groups,
+                n_item_groups,
+                lam_user_calib,
+                lam_item_calib,
+                lam_group_calib,
+                clip_correction,
+                use_oof_calibration,
+            ]
+
+        bounds:
+            learning_rate: [-6, -2.5]
+            lambda_reg: [-7, 0.5]
+
+            n_user_groups: [1, 5]
+            n_item_groups: [1, 5]
+
+            lam_user_calib: [-2.0, 2.0]
+            lam_item_calib: [-2.0, 3.0]
+            lam_group_calib: [-3.0, 3.5]
+
+            clip_correction: [0.02, 5.0]
+
+            use_oof_calibration: [0, 1]
+
+        transform:
+            learning_rate: pow10
+            lambda_reg: pow10
+
+            n_user_groups: int
+            n_item_groups: int
+
+            lam_user_calib: pow10
+            lam_item_calib: pow10
+            lam_group_calib: pow10
+
+            clip_correction: identity
+            use_oof_calibration: bool
+
+        n_init: 35
+        n_iter: 140
+        
+cornac_mf:
+    type: cornac
+    class_name: MF
+
+    fixed_params:
+        k: 20
+        backend: cpu
+        optimizer: sgd
+        use_bias: true
+        verbose: false
+
+    default_params:
+        learning_rate: 0.003
+        lambda_reg: 0.02
+
+    grid_params:
+        learning_rate: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+        lambda_reg: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+
+    bo:
+        param_order: [learning_rate, lambda_reg]
+
+        bounds:
+            learning_rate: [-6, -2.5]
+            lambda_reg: [-7, 0.5]
+
+        transform:
+            learning_rate: pow10
+            lambda_reg: pow10
+
+        n_init: 25
+        n_iter: 100
+
+cornac_pmf:
+    type: cornac
+    class_name: PMF
+
+    fixed_params:
+        k: 20
+        variant: non_linear
+        verbose: false
+
+    default_params:
+        learning_rate: 0.003
+        lambda_reg: 0.02
+        gamma: 0.9
+
+    grid_params:
+        learning_rate: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+        lambda_reg: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+        gamma: [0.8, 0.9, 0.95]
+
+    bo:
+        param_order: [learning_rate, lambda_reg, gamma]
+
+        bounds:
+            learning_rate: [-6, -2.5]
+            lambda_reg: [-7, 0.5]
+            gamma: [0.8, 0.99]
+
+        transform:
+            learning_rate: pow10
+            lambda_reg: pow10
+            gamma: identity
+
+        n_init: 25
+        n_iter: 100
+
+cornac_bpr:
+    type: cornac
+    class_name: BPR
+
+    fixed_params:
+        k: 20
+        use_bias: true
+        verbose: false
+
+    default_params:
+        learning_rate: 0.003
+        lambda_reg: 0.02
+
+    grid_params:
+        learning_rate: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+        lambda_reg: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+
+    bo:
+        param_order: [learning_rate, lambda_reg]
+
+        bounds:
+            learning_rate: [-6, -2.5]
+            lambda_reg: [-7, 0.5]
+
+        transform:
+            learning_rate: pow10
+            lambda_reg: pow10
+
+        n_init: 20
+        n_iter: 80
+
+cornac_wmf:
+    type: cornac
+    class_name: WMF
+
+    fixed_params:
+        k: 20
+        batch_size: 128
+        verbose: false
+
+    default_params:
+        lambda_u: 0.02
+        lambda_v: 0.02
+        a: 1.0
+        b: 0.01
+        learning_rate: 0.003
+
+    grid_params:
+        lambda_u: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+        lambda_v: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+        a: [0.1, 0.3, 1.0, 3.0]
+        b: [1e-4, 1e-3, 1e-2, 1e-1]
+        learning_rate: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+
+    bo:
+        param_order: [lambda_u, lambda_v, a, b, learning_rate]
+
+        bounds:
+            lambda_u: [-5, -1]
+            lambda_v: [-5, -1]
+            a: [-1, 0.5]
+            b: [-4, -1]
+            learning_rate: [-6, -2.5]
+
+        transform:
+            lambda_u: pow10
+            lambda_v: pow10
+            a: pow10
+            b: pow10
+            learning_rate: pow10
+
+        n_init: 30
+        n_iter: 120
+
+cornac_itemknn:
+    type: cornac
+    class_name: ItemKNN
+
+    fixed_params:
+        k: 20
+        similarity: cosine
+        weighting: null
+        verbose: false
+
+    default_params:
+        mean_centered: false
+        amplify: 1.0
+
+    grid_params:
+        mean_centered: [false, true]
+        amplify: [1.0, 1.5, 2.0, 3.0]
+
+    bo:
+        param_order: [amplify]
+
+        bounds:
+            amplify: [1.0, 3.0]
+
+        transform:
+            amplify: identity
+
+        n_init: 10
+        n_iter: 40
+
+cornac_mlp:
+    type: cornac
+    class_name: MLP
+
+    fixed_params:
+        layers: [64, 32, 16, 8]
+        batch_size: 128
+        act_fn: relu
+        learner: adam
+        backend: pytorch
+        verbose: false
+
+    default_params:
+        lr: 0.001
+        reg: 0.0001
+
+    grid_params:
+        lr: [0.0001, 0.0003, 0.001, 0.003, 0.01]
+        reg: [1e-5, 1e-4, 1e-3, 1e-2, 1e-1]
+
+    bo:
+        param_order: [lr, reg]
+
+        bounds:
+            lr:  [-6, -2.5]
+            reg: [-7, 0.5]
+
+        transform:
+            lr: pow10
+            reg: pow10
+
+        n_init: 25
+        n_iter: 100

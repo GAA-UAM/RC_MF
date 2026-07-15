@@ -1,0 +1,9 @@
+botorch==0.17.2
+cornac @ git+https://github.com/PreferredAI/cornac.git@21f6a6ce85aac297e7e6bfde0f748e7de5d91be5
+keras==3.14.0
+numpy==2.4.4
+pandas==3.0.2
+scikit-learn==1.8.0
+scipy==1.17.1
+tensorflow==2.21.0
+torch==2.11.0
