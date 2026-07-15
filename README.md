@@ -1,8 +1,6 @@
 # RC_MF
 RC-MF is a two-stage recommender framework that improves biased matrix factorization through regularized residual calibration.
 
-
-
 # License
 The package is licensed under the MIT license.
 
@@ -72,6 +70,12 @@ The search space and Bayesian-optimization budget are defined in:
 config/model_search_spaces.yml
 ```
 
+## Documentation
+
+Detailed usage instructions, commands, configuration options, and reproducibility examples are available in the project [Wiki](https://github.com/GAA-UAM/RC_MF/wiki).
+
+
+
 # Citations
 If you use RC-MF in your research or work, please consider citing this project using the following citation format.
 
@@ -86,9 +90,8 @@ If you use RC-MF in your research or work, please consider citing this project u
 
 ## Authors
 
-- Seyedsaman Emami
-- Alejandro Bellogín
-- Daniel Hernández-Lobato
+- [Seyedsaman (Saman) Emami](https://github.com/samanemami)
+- [Daniel Hernández-Lobato](https://github.com/danielhernandezlobato)
+- [Alejandro Bellogín](https://github.com/abellogin)
 
-Grupo de Aprendizaje Automático  
-Universidad Autónoma de Madrid
+[Grupo de Aprendizaje Automático](https://github.com/GAA-UAM) [Universidad Autónoma de Madrid](https://www.uam.es/uam/en/inicio)
